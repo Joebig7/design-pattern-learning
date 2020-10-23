@@ -1,4 +1,4 @@
-package com.mamba.creational.builderPattern;
+package com.mamba.creational.builder;
 
 /**
  * @author joe.zhang
