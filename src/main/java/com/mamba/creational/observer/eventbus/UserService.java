@@ -4,9 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -15,19 +14,20 @@ import java.util.concurrent.Executors;
  * Description: TODO
  */
 public class UserService {
-
-
     public void register(User user) {
-        EventBus eventBus = new AsyncEventBus(Executors.newFixedThreadPool(10));
+        List<Object> observers = getObservers();
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-       for(Object observer: getObservers()){
-           eventBus.register(observer);
-       }
-
-        System.out.println("register user end");
-
-       eventBus.post(user.getName());
-
+        EventBus eventBus = new AsyncEventBus(executorService);
+        try {
+            observers.forEach(o -> eventBus.register(o));
+            System.out.println("register user end");
+            eventBus.post(user.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            executorService.shutdown();
+        }
     }
 
 

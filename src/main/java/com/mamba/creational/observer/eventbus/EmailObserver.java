@@ -11,6 +11,11 @@ public class EmailObserver {
 
     @Subscribe
     public void send(String name) {
+        try {
+            Thread.sleep(3000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println("welcome " + name);
     }
 }
